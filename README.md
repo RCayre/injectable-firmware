@@ -5,7 +5,7 @@ Custom firmware for nrf52840-dongle, allowing to easily eavesdrop Bluetooth Low 
 * Install the latest ARM GCC Toolchain (C++ support needed), add it to your PATH variable
 * Download the latest NRF5 SDK from nordic semiconductors
 * Install nrfutil and add it to your PATH variable
-* Modify the SDK_ROOT variable in Makefile to match the SDK directory
+* Set the SDK_ROOT environment variable to match the SDK directory
 
 ## Compiling the firmware
 Compiling the firmware is straigtforward:

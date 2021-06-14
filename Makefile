@@ -2,7 +2,6 @@ PROJECT_NAME     := nrf52dongle-injectable
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := build
 
-SDK_ROOT := /home/$(USER)/Programmation/nrf5_sdk
 PROJ_DIR := src
 CONF_DIR := config
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \

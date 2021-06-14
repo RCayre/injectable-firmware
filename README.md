@@ -8,7 +8,7 @@ Custom firmware for nrf52840-dongle, allowing to easily eavesdrop Bluetooth Low 
 * Set the SDK_ROOT environment variable to match the SDK directory
 
 ## Compiling the firmware
-Compiling the firmware is straigtforward:
+Compiling the firmware is straightforward:
 ```
 $ make
 ```

@@ -547,7 +547,7 @@ void BLEController::checkAttackSuccess() {
 	// In the specific case of slave hijacking, we relies on an hijacking counter to check the attack success
 	else if (this->attackStatus.attack == BLE_ATTACK_SLAVE_HIJACKING) {
 		this->attackStatus.hijackingCounter = (this->packetCount <= 1 ? this->attackStatus.hijackingCounter + 1 : 0);
-		if (this->attackStatus.hijackingCounter > (uint32_t)(this->latency + 2)) {
+		if (this->attackStatus.hijackingCounter > (uint32_t)(this->latency)) {
 			if (!this->attackStatus.successful)  {
 				//We are sending a notification to Host
 				this->sendConnectionReport(ATTACK_SUCCESS);

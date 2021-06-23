@@ -22,7 +22,7 @@ The dongle should now be detected by your operating system:
 ```
 $ lsusb
 [...]
-Bus 001 Device 039: ID 5a17:0000 Mirage Toolkit SALTO device
+Bus 001 Device 039: ID 5a17:0000 Mirage Toolkit ButteRFly
 [...]
 ```
 
@@ -53,29 +53,28 @@ class injection_lightbulb(scenario.Scenario):
 1) Save this scenario as **injection_lightbulb.py** in the *scenarios* folder.
 2) Run the **ble_sniff** module with the following parameters:
 ```
-sudo ./mirage_launcher ble_sniff SNIFFING_MODE=newConnections SCENARIO=injection_lightbulb INTERFACE=salto0
+sudo ./mirage_launcher ble_sniff SNIFFING_MODE=newConnections SCENARIO=injection_lightbulb INTERFACE=butterfly0
 ```
 
 3) Establish the connection between the smartphone and the lightbulb: when you are synchronized with the connection, you can simply inject the previously mentioned packets by pressing up or down arrows keys.
 
 
 ## Hijacking the master role (experimental)
-InjectaBLE allows to perform master hijacking attacks by injecting a LL\_CONNECTION\_UPDATE\_IND packet and synchronize with the Slave when the Master changes its connection parameters. You can perform this kind of attacks using **ble_hijack** module:
+InjectaBLE allows to perform master hijacking attacks by injecting a LL\_CONNECTION\_UPDATE\_IND packet and synchronize with the Slave when the Slave changes its connection parameters. You can perform this kind of attacks using **ble_hijack** module:
 ```
-sudo ./mirage_launcher "ble_hijack|ble_master" ble_hijack1.INTERFACE=salto0 ble_hijack1.ROLE=master
+sudo ./mirage_launcher "ble_hijack|ble_master" ble_hijack1.INTERFACE=butterfly0 ble_hijack1.ROLE=master
 ```
 
 
 ## Hijacking the slave role (experimental)
 InjectaBLE allows to perform slave hijacking attacks by injecting a LL\_TERMINATE\_IND packet and synchronize with the Master when the Slave disconnects. You can perform this kind of attacks using **ble_hijack** module:
 ```
-sudo ./mirage_launcher "ble_hijack|ble_slave" ble_hijack1.INTERFACE=salto0 ble_hijack1.ROLE=slave
+sudo ./mirage_launcher "ble_hijack|ble_slave" ble_hijack1.INTERFACE=butterfly0 ble_hijack1.ROLE=slave
 ```
 
 
 ## Performing a MiTM attack (experimental)
-InjectaBLE allows to perform MiTM attacks by injecting a LL\_CONNECTION\_UPDATE\_IND packet and synchronize with both legitimate devices when the Master changes its connection parameters. You can perform this kind of attacks using **ble_mitm** module:
+InjectaBLE allows to perform MiTM attacks by injecting a LL\_CONNECTION\_UPDATE\_IND packet and synchronize with both legitimate devices when the Slave changes its connection parameters. You can perform this kind of attacks using **ble_mitm** module:
 ```
-sudo ./mirage_launcher ble_mitm INTERFACE=salto0 MITM_STRATEGY=injection
+sudo ./mirage_launcher ble_mitm INTERFACE=butterfly0 MITM_STRATEGY=injection
 ```
-

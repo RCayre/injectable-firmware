@@ -46,20 +46,17 @@
 
 #define USBD_STRING_PRODUCT_IX  0x02
 #define USBD_STRING_PRODUCT \
-	26,           /* length of descriptor (? bytes)         */\
+	23,           /* length of descriptor (? bytes)         */\
 	0x03,         /* descriptor type                        */\
-	'S', 0x00,    /* generic unicode string for all devices */\
-	'A', 0x00, \
-	'L', 0x00, \
-	'T', 0x00, \
-	'O', 0x00, \
-	' ', 0x00, \
-	'd', 0x00, \
+	'B', 0x00,    /* generic unicode string for all devices */\
+	'u', 0x00, \
+	't', 0x00, \
+	't', 0x00, \
 	'e', 0x00, \
-	'v', 0x00, \
-	'i', 0x00, \
-	'c', 0x00, \
-	'e', 0x00
+	'R', 0x00, \
+	'F', 0x00, \
+	'l', 0x00, \
+	'y', 0x00
 
 #define USBD_STRING_SERIAL_IX  0x00
 

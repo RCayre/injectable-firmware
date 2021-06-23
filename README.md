@@ -1,6 +1,11 @@
 # injectable-firmware
 Custom firmware for nrf52840-dongle, allowing to easily eavesdrop Bluetooth Low Energy communications and perform multiple active attacks based on InjectaBLE strategy.
 
+We published two papers describing this new Bluetooth Low Energy attack, allowing to inject malicious traffic into an established BLE connection:
+
+* Romain Cayre, Florent Galtier, Guillaume Auriol, Vincent Nicomette, Mohamed Kaâniche, et al.. [InjectaBLE : injection de trafic malveillant dans une connexion Bluetooth Low Energy](https://hal.laas.fr/hal-03221143). *Symposium sur la sécurité des technologies de l'information et des communications (SSTIC 2021)*, Jun 2021, Rennes (en ligne), France. **\[fr\]**
+* Romain Cayre, Florent Galtier, Guillaume Auriol, Vincent Nicomette, Mohamed Kaâniche, et al.. [InjectaBLE: Injecting malicious traffic into established Bluetooth Low Energy connections](https://hal.laas.fr/hal-03193297). *IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)*, Jun 2021, Taipei (virtual), Taiwan. **\[en\]**
+
 ## Installing the environment
 * Install the latest ARM GCC Toolchain (C++ support needed), add it to your PATH variable
 * Download the latest NRF5 SDK from nordic semiconductors
@@ -27,7 +32,7 @@ Bus 001 Device 039: ID 5a17:0000 Mirage Toolkit ButteRFly
 ```
 
 ## Injecting packets into an established connection
-You can use Mirage framework to interact with the dongle and perform injection attacks. For example, let's imagine you want to inject packets into a Bluetooth Low Energy connection between a lightbulb and a smartphone. You know that the following packets allow to turn the bulb on or off:
+You can use  [Mirage framework](https://github.com/RCayre/mirage) to interact with the dongle and perform injection attacks. For example, let's imagine you want to inject packets into a Bluetooth Low Energy connection between a lightbulb and a smartphone. You know that the following packets allow to turn the bulb on or off:
 
 * **Write command | handle = 0x0021 | data = 5510010d0a:** turn the bulb on
 * **Write command | handle = 0x0021 | data = 5510000d0a:** turn the bulb off

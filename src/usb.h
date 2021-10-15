@@ -22,7 +22,7 @@ typedef void (Core::*CoreCallback) (uint8_t*, size_t);
 #define STARTUP_DELAY 100
 
 #ifndef USBD_POWER_DETECTION
-	#define USBD_POWER_DETECTION true
+	#define USBD_POWER_DETECTION false
 #endif
 
 class USBModule {

@@ -1,11 +1,107 @@
-PROJECT_NAME     := nrf52dongle-injectable
+PROJECT_NAME     := injectable
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := build
+DIST_DIRECTORY 	 := dist
+
+
+ifeq ($(PLATFORM),)
+    PLATFORM = BOARD_PCA10059
+endif
+
+SUPPORTED_PLATFORMS = BOARD_PCA10059 BOARD_MDK_DONGLE
+
+ifeq ($(filter $(PLATFORM), $(SUPPORTED_PLATFORMS)),)
+    $(error "PLATFORM not in $(SUPPORTED_PLATFORMS)")
+endif
+
+ifeq ($(PLATFORM),BOARD_PCA10059)
+    LINKER_FILE := config/pca10059/pca10059.ld
+    CONF_DIR := config/pca10059
+    
+	# C flags common to all targets
+	CFLAGS += $(OPT)
+	CFLAGS += -DAPP_TIMER_V2
+	CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
+	CFLAGS += -DBOARD_PCA10059
+	CFLAGS += -DCONFIG_GPIO_AS_PINRESET
+	CFLAGS += -DFLOAT_ABI_HARD
+	CFLAGS += -DNRF52840_XXAA
+	CFLAGS += -mcpu=cortex-m4
+	CFLAGS += -mthumb -mabi=aapcs
+	CFLAGS += -Wall
+	CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+	# keep every function in a separate section, this allows linker to discard unused ones
+	CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
+	CFLAGS += -fno-builtin -fshort-enums
+
+	# C++ flags common to all targets
+	CXXFLAGS += $(OPT)
+	# Assembler flags common to all targets
+	ASMFLAGS += -g3
+	ASMFLAGS += -mcpu=cortex-m4
+	ASMFLAGS += -mthumb -mabi=aapcs
+	ASMFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+	ASMFLAGS += -DAPP_TIMER_V2
+	ASMFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
+	ASMFLAGS += -DBOARD_PCA10059
+	ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
+	ASMFLAGS += -DFLOAT_ABI_HARD
+	ASMFLAGS += -DNRF52840_XXAA
+	
+	SRC_FILES += $(SDK_ROOT)/components/libraries/timer/app_timer2.c
+	SRC_FILES += $(SDK_ROOT)/components/libraries/timer/drv_rtc.c
+endif
+
+ifeq ($(PLATFORM),BOARD_MDK_DONGLE)
+    LINKER_FILE := config/mdk-dongle/mdk-dongle.ld
+    CONF_DIR := config/mdk-dongle
+    MDK_MOUNTPOINT := $(shell mount | grep MDK-DONGLE | awk '{print $$3}')
+    
+	# C flags common to all targets
+	CFLAGS += $(OPT)
+	CFLAGS += -DBOARD_CUSTOM
+	CFLAGS += -DNRF52840_MDK_DONGLE
+	#CFLAGS += -DCONFIG_GPIO_AS_PINRESET
+	CFLAGS += -DDEBUG
+	CFLAGS += -DDEBUG_NRF
+	CFLAGS += -DFLOAT_ABI_HARD
+	CFLAGS += -DNRF52840_XXAA
+	CFLAGS += -DSWI_DISABLE0
+	CFLAGS += -mcpu=cortex-m4
+	CFLAGS += -mthumb -mabi=aapcs
+	CFLAGS += -Wall -Werror
+	CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+	# keep every function in a separate section, this allows linker to discard unused ones
+	CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
+	CFLAGS += -fno-builtin -fshort-enums
+
+	# C++ flags common to all targets
+	CXXFLAGS += $(OPT)
+
+	# Assembler flags common to all targets
+	ASMFLAGS += -g3
+	ASMFLAGS += -mcpu=cortex-m4
+	ASMFLAGS += -mthumb -mabi=aapcs
+	ASMFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+	ASMFLAGS += -DBOARD_CUSTOM
+	ASMFLAGS += -DNRF52840_MDK_DONGLE
+	#ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
+	ASMFLAGS += -DDEBUG
+	ASMFLAGS += -DDEBUG_NRF
+	ASMFLAGS += -DFLOAT_ABI_HARD
+	ASMFLAGS += -DNRF52840_XXAA
+	ASMFLAGS += -DSWI_DISABLE0	
+	
+	SRC_FILES += $(SDK_ROOT)/components/libraries/timer/app_timer.c
+endif
+
+
+
 
 PROJ_DIR := src
-CONF_DIR := config
+#CONF_DIR := config
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
-  LINKER_SCRIPT  := gcc_nrf52.ld
+  LINKER_SCRIPT  := $(LINKER_FILE)
 
 # Source files common to all targets
 SRC_FILES += \
@@ -20,7 +116,6 @@ SRC_FILES += \
 	$(SDK_ROOT)/components/libraries/util/app_error.c \
 	$(SDK_ROOT)/components/libraries/util/app_error_handler_gcc.c \
 	$(SDK_ROOT)/components/libraries/util/app_error_weak.c \
-	$(SDK_ROOT)/components/libraries/timer/app_timer2.c \
 	$(SDK_ROOT)/components/libraries/uart/app_uart_fifo.c \
 	$(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
 	$(SDK_ROOT)/components/libraries/usbd/class/cdc/acm/app_usbd_cdc_acm.c \
@@ -28,7 +123,6 @@ SRC_FILES += \
 	$(SDK_ROOT)/components/libraries/usbd/app_usbd_serial_num.c \
 	$(SDK_ROOT)/components/libraries/usbd/app_usbd_string_desc.c \
 	$(SDK_ROOT)/components/libraries/util/app_util_platform.c \
-	$(SDK_ROOT)/components/libraries/timer/drv_rtc.c \
 	$(SDK_ROOT)/components/libraries/hardfault/nrf52/handler/hardfault_handler_gcc.c \
 	$(SDK_ROOT)/components/libraries/hardfault/hardfault_implementation.c \
 	$(SDK_ROOT)/components/libraries/util/nrf_assert.c \
@@ -131,36 +225,6 @@ OPT = -O3 -g3
 # Uncomment the line below to enable link time optimization
 #OPT += -flto
 
-# C flags common to all targets
-CFLAGS += $(OPT)
-CFLAGS += -DAPP_TIMER_V2
-CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
-CFLAGS += -DBOARD_PCA10059
-CFLAGS += -DCONFIG_GPIO_AS_PINRESET
-CFLAGS += -DFLOAT_ABI_HARD
-CFLAGS += -DNRF52840_XXAA
-CFLAGS += -mcpu=cortex-m4
-CFLAGS += -mthumb -mabi=aapcs
-CFLAGS += -Wall
-CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
-# keep every function in a separate section, this allows linker to discard unused ones
-CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
-CFLAGS += -fno-builtin -fshort-enums
-
-# C++ flags common to all targets
-CXXFLAGS += $(OPT)
-# Assembler flags common to all targets
-ASMFLAGS += -g3
-ASMFLAGS += -mcpu=cortex-m4
-ASMFLAGS += -mthumb -mabi=aapcs
-ASMFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
-ASMFLAGS += -DAPP_TIMER_V2
-ASMFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED
-ASMFLAGS += -DBOARD_PCA10059
-ASMFLAGS += -DCONFIG_GPIO_AS_PINRESET
-ASMFLAGS += -DFLOAT_ABI_HARD
-ASMFLAGS += -DNRF52840_XXAA
-
 # Linker flags
 LDFLAGS += $(OPT)
 LDFLAGS += -mthumb -mabi=aapcs -L$(SDK_ROOT)/modules/nrfx/mdk -T$(LINKER_SCRIPT)
@@ -183,9 +247,15 @@ LIB_FILES += -lc -lnosys -lm
 
 .PHONY: default help
 
+
 # Default target - first one defined
 default: nrf52840_xxaa
-
+ifeq ($(PLATFORM),BOARD_PCA10059)
+	cp $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DIST_DIRECTORY)/pca10059.hex
+endif
+ifeq ($(PLATFORM),BOARD_MDK_DONGLE)
+	cp $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(DIST_DIRECTORY)/mdk-dongle.hex
+endif
 # Print all targets that can be built
 help:
 	@echo following targets are available:
@@ -202,11 +272,29 @@ $(foreach target, $(TARGETS), $(call define_target, $(target)))
 
 .PHONY: flash erase
 
+create_builddir:
+	mkdir -p build
 
-send: default
+send: create_builddir
+ifeq ($(PLATFORM),BOARD_PCA10059)
 	@echo "Generating DFU package ..."
 	rm -f $(OUTPUT_DIRECTORY)/dfu.zip
-	nrfutil pkg generate --hw-version 52 --sd-req 0x00 --debug-mode --application $(OUTPUT_DIRECTORY)/nrf52840_xxaa.hex $(OUTPUT_DIRECTORY)/dfu.zip
+	nrfutil pkg generate --hw-version 52 --sd-req 0x00 --debug-mode --application $(DIST_DIRECTORY)/pca10059.hex $(OUTPUT_DIRECTORY)/dfu.zip
 	@echo "Flashing device ..."
 	nrfutil dfu usb-serial -pkg $(OUTPUT_DIRECTORY)/dfu.zip -p /dev/ttyACM0 -b 115200
 	@echo "Done :)"
+endif
+ifeq ($(PLATFORM),BOARD_MDK_DONGLE)
+ifneq ($(MDK_MOUNTPOINT),)
+	@echo "Generating DFU package ..."
+	rm -f $(OUTPUT_DIRECTORY)/flash.uf2
+	python3 $(CONF_DIR)/uf2conv.py $(DIST_DIRECTORY)/mdk-dongle.hex -c -f 0xADA52840 -o $(OUTPUT_DIRECTORY)/flash.uf2
+	@echo "Flashing device ..."
+	cp $(OUTPUT_DIRECTORY)/flash.uf2 $(MDK_MOUNTPOINT)
+	@echo "Done :)"
+endif
+ifeq ($(MDK_MOUNTPOINT),)
+	@echo "Mountpoint not detected, aborting ..."
+endif
+endif
+

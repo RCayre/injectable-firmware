@@ -407,7 +407,7 @@ void USBModule::init() {
 	APP_ERROR_CHECK(ret);
 	nrf_drv_clock_hfclk_request(NULL);
 	nrf_drv_clock_lfclk_request(NULL);
-	while (!(nrf_drv_clock_hfclk_is_running() && nrf_drv_clock_lfclk_is_running()));
+	while (!(nrf_drv_clock_hfclk_is_running()));
 	ret = app_timer_init();
 	APP_ERROR_CHECK(ret);
 	/* Avoid warnings if assertion is disabled */

@@ -1,18 +1,38 @@
 # injectable-firmware
-Custom firmware for nrf52840-dongle, allowing to easily eavesdrop Bluetooth Low Energy communications and perform multiple active attacks based on InjectaBLE strategy.
+Custom firmware for PCA10059 NRF52840 Dongle (from Nordic SemiConductors) and nRF52840 MDK USB Dongle (from MakerDiary), allowing to easily eavesdrop Bluetooth Low Energy communications and perform multiple active attacks based on InjectaBLE strategy.
 
 We published two papers describing this new Bluetooth Low Energy attack, allowing to inject malicious traffic into an established BLE connection:
 
 * Romain Cayre, Florent Galtier, Guillaume Auriol, Vincent Nicomette, Mohamed Kaâniche, et al.. [InjectaBLE : injection de trafic malveillant dans une connexion Bluetooth Low Energy](https://hal.laas.fr/hal-03221143). *Symposium sur la sécurité des technologies de l'information et des communications (SSTIC 2021)*, Jun 2021, Rennes (en ligne), France. **\[fr\]**
 * Romain Cayre, Florent Galtier, Guillaume Auriol, Vincent Nicomette, Mohamed Kaâniche, et al.. [InjectaBLE: Injecting malicious traffic into established Bluetooth Low Energy connections](https://hal.laas.fr/hal-03193297). *IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)*, Jun 2021, Taipei (virtual), Taiwan. **\[en\]**
 
+## Flashing the pre-compiled firmware
+We now provide pre-compiled HEX files in the *dist* directory, allowing you to flash the firmware without installing the toolchain (thanks to *maichai* for the suggestion !). 
+* If you are using a PCA10059 dongle from Nordic SemiConductors, you need to install nrfutil and add it to your PATH variable. Then you can flash the dongle using the following command:
+```
+$ make send
+```
+
+* If you are using a MDK dongle from MakerDiary, you have to flash the [UF2 Bootloader](https://github.com/makerdiary/uf2-bootloader). Then you can flash the dongle using the following command:
+```
+$ make send PLATFORM=BOARD_MDK_DONGLE
+```
+
+The dongle should now be detected by your operating system:
+```
+$ lsusb
+[...]
+Bus 001 Device 039: ID 5a17:0000 Mirage Toolkit ButteRFly
+[...]
+```
+
 ## Installing the environment
 * Install the latest ARM GCC Toolchain (C++ support needed), add it to your PATH variable
 * Download the latest NRF5 SDK from nordic semiconductors
-* Install nrfutil and add it to your PATH variable
+* Install nrfutil and add it to your PATH variable (only needed for pca10059 dongle)
 * Set the SDK_ROOT environment variable to match the SDK directory
 
-## Compiling the firmware
+## Compiling the firmware (pca10059)
 Compiling the firmware is straightforward:
 ```
 $ make
@@ -21,6 +41,26 @@ $ make
 Then, you can use the send command to flash it on the dongle:
 ```
 $ make send
+```
+
+The dongle should now be detected by your operating system:
+```
+$ lsusb
+[...]
+Bus 001 Device 039: ID 5a17:0000 Mirage Toolkit ButteRFly
+[...]
+```
+
+
+## Compiling the firmware (mdk-dongle)
+Compiling the firmware is straightforward:
+```
+$ make PLATFORM=BOARD_MDK_DONGLE
+```
+
+Then, you can use the send command to flash it on the dongle:
+```
+$ make send PLATFORM=BOARD_MDK_DONGLE
 ```
 
 The dongle should now be detected by your operating system:

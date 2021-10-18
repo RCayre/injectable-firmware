@@ -97,7 +97,7 @@ endif
 
 
 
-
+ifneq ($(MAKECMDGOALS),send)
 PROJ_DIR := src
 #CONF_DIR := config
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
@@ -269,6 +269,7 @@ TEMPLATE_PATH := $(SDK_ROOT)/components/toolchain/gcc
 include $(TEMPLATE_PATH)/Makefile.common
 
 $(foreach target, $(TARGETS), $(call define_target, $(target)))
+endif
 
 .PHONY: flash erase
 
